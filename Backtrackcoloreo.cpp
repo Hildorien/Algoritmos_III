@@ -90,7 +90,7 @@ int BacktrackColoreo(int n , int a[] , int b[] , int k, int pintados)
 		if(PuedoPintar(n,a,b,k,c)) 
 		{
 			b[k] = c;
- 			if ( c!= 3) {pintados++;}
+ 			if (c!= 3) {pintados++;}
 
  			cout << " b queda : " << endl;
  			for(int i = 0 ; i < n ; i++)
@@ -103,12 +103,20 @@ int BacktrackColoreo(int n , int a[] , int b[] , int k, int pintados)
  			if( (k+1) < n) 
 			{
 				BacktrackColoreo(n,a,b,k+1,pintados);
-				
 				for (int i = k + 1; i < n ; i++) // Subo un nivel, despinto todo lo que venia pintando hasta el nivel que subi para probar otro camino
 				{
 					b[i] = 0;
-
 				}
+				int aux = 0;
+				for (int i = 0; i <= k ; i++) 
+				{
+					if(b[i] != 3 && b[i] != 0)
+					{
+						aux++;
+					}
+				}
+				pintados = aux;
+				aux = 0;
 			}
 			
 		}					
