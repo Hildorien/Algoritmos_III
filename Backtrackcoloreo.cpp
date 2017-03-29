@@ -5,7 +5,9 @@
 #include <cstdlib>
 #include <algorithm>
 
-int max; // variable global NO ME FUNCIONA, NO PUEDO USARLA EN NINGUNA OTRA FUNCION , NI EN MAIN
+int maxPintados; 
+int aux;
+
 
 using namespace std;
 
@@ -81,42 +83,35 @@ bool PuedoPintar(int n , int a[] , int b[] ,  int k , int c)
 
 
 
-int BacktrackColoreo(int n , int a[] , int b[] , int k , int pintados) 
+int BacktrackColoreo(int n , int a[] , int b[] , int k, int pintados) 
 {
-	//cout << " k en esta llamada vale " << k << endl;;
 	for (int c = 1 ; c <= 3 ; c++) 
-	{
-		if (k == 0) 
-		{
-	//		cout << " Si vuelvo al primero comenzar a pintar devuelta" << endl;
-			pintados = 0;
-			for (int i = 0; i < n ; i++)
-			{
-				b[i] = 0;
-			}
-		}
-
+	{		
 		if(PuedoPintar(n,a,b,k,c)) 
 		{
 			b[k] = c;
-	//		cout << "Pinte en la pos " << k << " el " << a[k] << "de color " << c << " y en b[k] quedo : " << b[k] << endl;
-			if (c!= 3) {
-				pintados++;
-	//			cout << "Si pinte un Rojo o Azul incremente pintados y vale: "  << pintados << endl;
-			}
-			//if (pintados >= max){max = pintados;}
+ 			if ( c!= 3) {pintados++;}
+
+ 			cout << " b queda : " << endl;
+ 			for(int i = 0 ; i < n ; i++)
+ 			{
+ 				cout << b[i] << " , ";
+ 			}
+ 			cout << endl;
+ 			cout << " Pintados vale : " << pintados << endl;
+
  			if( (k+1) < n) 
 			{
-	//			cout << " Valor de k antes de la llamada recursiva : " << k << endl;
-	//			cout << " Valor de pintados antes de la llamada recursiva : " << pintados << endl;
 				BacktrackColoreo(n,a,b,k+1,pintados);
-	//			cout << " Valor de k despues de la llamada recursiva : " << k << endl;
-	//			cout << " Valor de pintados despues de la llamada recursiva : " << pintados << endl;
+				
+				for (int i = k + 1; i < n ; i++) // Subo un nivel, despinto todo lo que venia pintando hasta el nivel que subi para probar otro camino
+				{
+					b[i] = 0;
 
+				}
 			}
 			
-		}
-					
+		}					
 	}
 	return true; // Si sali del ciclo es porque ya probe los tres colores;
 }
@@ -137,7 +132,10 @@ int Coloreo (int n, int a[])
 		{
 			b[i] = 0;
 		}
+		maxPintados = 0;
+		pintados = 0;
 		BacktrackColoreo(n,a,b,k,pintados);
+		return n - maxPintados;
 	}
 
 }
@@ -145,10 +143,10 @@ int Coloreo (int n, int a[])
 
 int main() 
 {
-	int n = 2;
-	int a[n] = {9,8};
-	//max = 0;
+	int n = 4;
+	int a[n] = {0,7,1,2};
 	int res = Coloreo(n,a);
+	cout << maxPintados << endl;
 
 
 }
