@@ -25,7 +25,7 @@ int pot(int a,int n)
 int cantPintados(int n, int b[])
 {
 	int res = 0;
-	for(int i = 0; i < n ; i++)
+	for(int i = 0; i <= n ; i++)
 	{
 		if(b[i] == 1 || b[i] == 2)
 		{
@@ -117,15 +117,15 @@ int BacktrackColoreo(int n , int a[] , int b[] , int k)
  			if( (k+1) < n) 
 			{
 				BacktrackColoreo(n,a,b,k+1);
-				for (int i = k + 1; i < n ; i++) // Subo un nivel, despinto todo lo que venia pintando hasta el nivel que subi para probar otro camino
-				{
-					b[i] = 0;
-				}
+				//for (int i = k + 1; i < n ; i++) // Subo un nivel, despinto todo lo que venia pintando hasta el nivel que subi para probar otro camino
+				//{
+				//	b[i] = 0;
+				//}
 				
 			}
 			else
 			{
-				int p = cantPintados(n,b); 	//Calculo cuantos pinte de azul o rojo hasta la hoja;
+				int p = cantPintados(k,b); 	//Calculo cuantos pinte de azul o rojo hasta la hoja;
 				if(p >= maxPintados){maxPintados = p;}
 			}
 			
@@ -159,7 +159,7 @@ int Coloreo (int n, int a[])
 
 int main() 
 {
-	int n = 12;
-	int a[n] = {3,11,0,1,3,5,2,4,1,0,9,3};
+	int n = 4;
+	int a[n] = {0,1,7,2};
 	int res = Coloreo(n,a);
 }
