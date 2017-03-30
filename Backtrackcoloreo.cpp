@@ -5,11 +5,35 @@
 #include <cstdlib>
 #include <algorithm>
 
-int maxPintados; 
-int aux;
-
-
 using namespace std;
+
+int maxPintados;
+
+int pot(int a,int n)
+{
+	if ( n == 0){return 1;}
+	if ( n%2 == 0)
+	{
+		return pot(a*a,n/2);
+	}
+	else
+	{
+		return pot(a,n-1)*a;
+	}
+}
+
+int cantPintados(int n, int b[])
+{
+	int res = 0;
+	for(int i = 0; i < n ; i++)
+	{
+		if(b[i] == 1 || b[i] == 2)
+		{
+			res++;
+		}
+	}
+	return res;
+}
 
 bool PuedoPintar(int n , int a[] , int b[] ,  int k , int c)
 {
@@ -83,40 +107,26 @@ bool PuedoPintar(int n , int a[] , int b[] ,  int k , int c)
 
 
 
-int BacktrackColoreo(int n , int a[] , int b[] , int k, int pintados) 
+int BacktrackColoreo(int n , int a[] , int b[] , int k) 
 {
 	for (int c = 1 ; c <= 3 ; c++) 
 	{		
 		if(PuedoPintar(n,a,b,k,c)) 
 		{
 			b[k] = c;
- 			if (c!= 3) {pintados++;}
-
- 			cout << " b queda : " << endl;
- 			for(int i = 0 ; i < n ; i++)
- 			{
- 				cout << b[i] << " , ";
- 			}
- 			cout << endl;
- 			cout << " Pintados vale : " << pintados << endl;
-
  			if( (k+1) < n) 
 			{
-				BacktrackColoreo(n,a,b,k+1,pintados);
+				BacktrackColoreo(n,a,b,k+1);
 				for (int i = k + 1; i < n ; i++) // Subo un nivel, despinto todo lo que venia pintando hasta el nivel que subi para probar otro camino
 				{
 					b[i] = 0;
 				}
-				int aux = 0;
-				for (int i = 0; i <= k ; i++) 
-				{
-					if(b[i] != 3 && b[i] != 0)
-					{
-						aux++;
-					}
-				}
-				pintados = aux;
-				aux = 0;
+				
+			}
+			else
+			{
+				int p = cantPintados(n,b); 	//Calculo cuantos pinte de azul o rojo hasta la hoja;
+				if(p >= maxPintados){maxPintados = p;}
 			}
 			
 		}					
@@ -136,25 +146,20 @@ int Coloreo (int n, int a[])
 		int b[n];
 		int pintados = 0;
 		int k = 0;
+		maxPintados = 0;
 		for (int i = 0; i < n ; i++) 
 		{
 			b[i] = 0;
 		}
-		maxPintados = 0;
-		pintados = 0;
-		BacktrackColoreo(n,a,b,k,pintados);
-		return n - maxPintados;
+		BacktrackColoreo(n,a,b,k);
+		cout << maxPintados << endl;
 	}
 
 }
 
-
 int main() 
 {
-	int n = 4;
-	int a[n] = {0,7,1,2};
+	int n = 12;
+	int a[n] = {3,11,0,1,3,5,2,4,1,0,9,3};
 	int res = Coloreo(n,a);
-	cout << maxPintados << endl;
-
-
 }
