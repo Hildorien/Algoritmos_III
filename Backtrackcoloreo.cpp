@@ -79,7 +79,7 @@ bool PuedoPintar(int n , int a[] , int b[] ,  int k , int c)
 int BacktrackColoreo(int n , int a[] , int b[] , int k) 
 {
 	for (int c = 1 ; c <= 3 ; c++)    // El ciclo principal del algoritmo recorre las tres descisiones posible : 
-	{		                          // c = 1 es ROJO, c = 2 es AZUL , c = 3 , NO lo pinto
+	{		                          // c = 1 es ROJO, c = 2 es AZUL , c = 3 es NO lo pinto
 		if(PuedoPintar(n,a,b,k,c)) 
 		{
 			b[k] = c;                 // b es un arreglos paralelo al original que lo uso para ir construyendo las posibles soluciones
@@ -90,7 +90,7 @@ int BacktrackColoreo(int n , int a[] , int b[] , int k)
 			}
 			else                      // Si llegue a una hoja en el arbol de decisiones. Termine con una posible solucion en b.
 			{
-				int p = cantPintados(k,b);     // Cuento cuantos elementos pinte
+				int p = cantPintados(k,b);     // Cuento cuantos elementos pinte hasta k
 				if(p >= maxPintados){maxPintados = p;}  // Si supere los que habia pintado en una solucion anterior guardada en
 														// variable global, actualizo el maximo 
 			}

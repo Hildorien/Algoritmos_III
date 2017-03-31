@@ -42,7 +42,7 @@ vector<int> Extraer (vector<int> v1 , vector<int> v2)
 
 
 
-vector<int> Longest_sub(vector< vector <int> > s)
+vector<int> longest_sub(vector< vector <int> > s)
 {
 	int max = 0;
 	vector<int> res;
@@ -71,17 +71,17 @@ vector<int> max_Rojos(vector<int>& v)
 		{
 			if( (v[j] < v[i]) && (s[i].size() < s[j].size() +1 ))
 			{
-				s[i] = s[j]; // s[i] = [v[j] | j < i & v[j] < v[i]] ++ [v[i]]
+				s[i] = s[j]; // Uso lo que calcule anteriormente
 			}
 		}	
-		s[i].push_back(v[i]);
+		s[i].push_back(v[i]); // s[i] = [v[j] | (j < i) & (v[j] < v[i])] ++ [v[i]]
 	}
-	return Longest_sub(s); // Deberia devolver tmb en los indices que estan usados
+	return longest_sub(s); // Deberia devolver tmb en los indices que estan usados
 }
 
 vector<int> max_Azules(vector<int>& v)
 {
-	vector< vector<int> > s(v.size()); // La subsecuencia mas larga de rojos termina en v[i]
+	vector< vector<int> > s(v.size()); // La subsecuencia mas larga de azules termina en v[i]
 	
 	s[0].push_back(v[0]);  // Claramente s[0] = {v[0]} pues la subsecuencia mas larga que termina en v[0] es la que tiene solo al v[0];
 	
@@ -91,12 +91,12 @@ vector<int> max_Azules(vector<int>& v)
 		{
 			if( (v[j] > v[i]) && (s[i].size() < s[j].size() +1 ))
 			{
-				s[i] = s[j];
+				s[i] = s[j]; // Uso lo que calcule anteriormente
 			}
 		}	
-		s[i].push_back(v[i]);
+		s[i].push_back(v[i]); // s[i] = [v[j] | (j < i) & (v[j] > v[i])] ++ [v[i]]
 	}
-	return Longest_sub(s);
+	return longest_sub(s);
 }
 
 int parsertam(ifstream &myfile)  // Devuelve el tamanio del arreglo
