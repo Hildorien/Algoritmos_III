@@ -125,7 +125,7 @@ int parsertam(ifstream &myfile)  // Devuelve el tamanio del arreglo
 {
 	int tam;
 	string n;
-	myfile.open("/home/toni-acer-ubuntu/Documents/Algoritmos_y estructura_de_datos_III/Algoritmos_III/listas.txt");
+	myfile.open("listas.txt");
 	if (myfile.is_open())
 	{
 		getline(myfile,n); // n esta el primer arguemento
@@ -142,7 +142,7 @@ vector<int> parser(ifstream &myfile) { // Devuelve un arreglo con los numeros;
 	string str;
 	char cNum[10];
 	int i = 0;
-	myfile.open("/home/toni-acer-ubuntu/Documents/Algoritmos_y estructura_de_datos_III/Algoritmos_III/listas.txt");
+	myfile.open("listas.txt");
 	if (myfile.is_open())
 	{
 		getline(myfile,n); // n esta el primer arguemento
