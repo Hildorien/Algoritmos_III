@@ -4,99 +4,72 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
-
+#include <bits/stdc++.h>
+#define MAX 102
 
 using namespace std;
 
-struct Tupla {
-	int x,y;
-	Tupla();
-};
-Tupla::Tupla() {
-	x = 0;
-	y = 0;
-}
-
-vector<int> Extraer (vector<int> v1 , vector<int> v2)
+int min_SinPintar(int arr[], int dp[MAX][MAX][MAX], int n, int dec, int inc, int i)
 {
-	vector<int> res;
-	vector< Tupla > marcados;
-	for ( int i = 0 ; i < v1.size() ; i++) 
-	{
-		marcados[i].x = 0;
-		marcados[i].y = 0;
-	}
-
-	for(int i = 0; i < v1.size() ; i ++)
-	{
-		for(int j = 0 ; j < v2.size() ; j++)
-		{
-			if( v1[i] != v2[j] )
-			{
-				res.push_back(v1[i]);
-			}
-		}
-	}
+    // Si ya lo calcule devolver
+    if (dp[dec][inc][i] != -1)
+        return dp[dec][inc][i];
+ 
+    // Si ya revise todo
+    if (i == n)
+        return 0;
+ 
+    // en a[i] tomo la decision de pintarlo de rojo (ser parte de una cadena creciente)
+    if (arr[i] > arr[inc])
+        // Voy al siguiente elemento tomando la decision de que en la pos i lo pinte de rojo
+        dp[dec][inc][i] = min_SinPintar(arr, dp, n, dec, i, i + 1);
+ 
+    // en a[i] tomo la decision de pintarlo de azul (ser parte de una cadena decreciente)
+    if (arr[i] < arr[dec])
+    {
+        // Si es la primera vez que lo voy a pintar de azul
+        if (dp[dec][inc][i] == -1)
+            // Voy al siguiente elemento tomando la decision de que en la pos i lo pinte de azul
+            dp[dec][inc][i] = min_SinPintar(arr, dp, n, i, inc, i + 1);
+ 
+        // Si ya habia tomado una decision sobre i (como siempre pregunto primero si puedo pintarlo de rojo 
+        // quiere decir que i ya fue considerado como rojo). Ahora debo ver si la decision es optima 
+        // , es decir , si tengo la minima cantidad de elementos no pintados
+        else
+            //Tengo que decidir el minimo entre dejarlo como estaba o pintarlo de azul y seguir avanzando recursivamente
+            dp[dec][inc][i] = min(min_SinPintar(arr, dp, n, i, inc, i + 1),
+                                                  dp[dec][inc][i]);
+    }
+ 
+    // Si el elemento no puede ser pintado de algun color y es la primera vez que paso por esta decision
+    if (dp[dec][inc][i] == -1)
+       // Ya tengo uno que no puedo pintar asique sumo uno y sigo avanzando con recursion
+        dp[dec][inc][i] = 1 + min_SinPintar(arr, dp, n, dec, inc, i + 1); 
+ 
+    // Si ya se habia tomado una decision para el elemento en la pos i , y ahora se considera no pintarlo
+    else
+    // Tengo que tomar la decision optima, es decir, el minimo entre dejarlo como estaba antes o dejarlo como no pintado y seguir avanzando
+        dp[dec][inc][i] = min(1 + min_SinPintar(arr, dp, n, dec, inc, i + 1),
+                                                    dp[dec][inc][i]);
+ 
+    return dp[dec][inc][i];
 }
+ 
 
-
-
-
-vector<int> longest_sub(vector< vector <int> > s)
+int Ejercicio3(int arr[], int n)
 {
-	int max = 0;
-	vector<int> res;
-	for( int i = 0; i < s.size() ; i++)
-	{
-		
-		if( s[i].size() > max)
-		{
-			max = s[i].size();
-			res = s[i];
-		}
-	}
-
-	return res;
-}
-
-vector<int> max_Rojos(vector<int>& v)
-{
-	vector< vector<int> > s(v.size()); // La subsecuencia mas larga de rojos termina en v[i]
-	
-	s[0].push_back(v[0]);  // Claramente s[0] = {v[0]} pues la subsecuencia mas larga que termina en v[0] es la que tiene solo al v[0];
-	
-	for(int i=1 ; i<v.size() ; i++)
-	{
-		for(int j=0 ; j<i ; j++)
-		{
-			if( (v[j] < v[i]) && (s[i].size() < s[j].size() +1 ))
-			{
-				s[i] = s[j]; // Uso lo que calcule anteriormente
-			}
-		}	
-		s[i].push_back(v[i]); // s[i] = [v[j] | (j < i) & (v[j] < v[i])] ++ [v[i]]
-	}
-	return longest_sub(s); // Deberia devolver tmb en los indices que estan usados
-}
-
-vector<int> max_Azules(vector<int>& v)
-{
-	vector< vector<int> > s(v.size()); // La subsecuencia mas larga de azules termina en v[i]
-	
-	s[0].push_back(v[0]);  // Claramente s[0] = {v[0]} pues la subsecuencia mas larga que termina en v[0] es la que tiene solo al v[0];
-	
-	for(int i=1 ; i<v.size() ; i++)
-	{
-		for(int j=0 ; j<i ; j++)
-		{
-			if( (v[j] > v[i]) && (s[i].size() < s[j].size() +1 ))
-			{
-				s[i] = s[j]; // Uso lo que calcule anteriormente
-			}
-		}	
-		s[i].push_back(v[i]); // s[i] = [v[j] | (j < i) & (v[j] > v[i])] ++ [v[i]]
-	}
-	return longest_sub(s);
+    // Agrego dos elementos al arreglo
+    // para que se puedan armar las subsecuencias de rojos y azules
+    // en la pos MAX - 2  es asignado INT_MAX para los azules (cadena decreciente)
+    // ya que el siguiente numero debe ser mas chico. De esta manera siempre un elem va a ser mas chico que INT_MAX
+    //Igualmente para los rojos (cadena creciente) INT_MIN es asignado a la pos MAX - 1
+    arr[MAX - 2] = INT_MAX;
+    arr[MAX - 1] = INT_MIN;
+ 
+    int dp[MAX][MAX][MAX];
+    memset(dp, -1, sizeof dp);
+ 
+    return min_SinPintar(arr, dp, n, MAX - 2, MAX - 1, 0);
 }
 
 int parsertam(ifstream &myfile)  // Devuelve el tamanio del arreglo
@@ -147,7 +120,10 @@ int main() {
 	ifstream myfile;
 	int n = parsertam(myfile);
 	vector<int> vec = parser(myfile);
-	vector<int> r = max_Rojos(vec);
+	int arr[n];
+	copy(vec.begin(),vec.end(),arr);
+	cout << Ejercicio3(arr,n) << endl;
+
 	return 0;
 
 }
