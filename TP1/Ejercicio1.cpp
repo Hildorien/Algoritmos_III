@@ -5,8 +5,12 @@
 #include <cstdlib>
 #include <algorithm>
 
-
 using namespace std;
+
+//ACLARACION : Para resolver los ejercicios opte por devolver la MAXIMA cantidad de elementos pintados en las funciones recursivas.
+// Luego la funcion principal, que devuelve el resultado final, simplemente le resta a la longitud del arreglo lo que devuelven las
+// funciones recursivas, es decir , la MINIMA cantidad de elementos que deje sin pintar en el arreglo.
+
 
 int maxPintados1;
 
