@@ -1,9 +1,14 @@
 #include <iostream>
-#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
-#include <vector>
+#include <ctime>
 #include <cstdlib>
 #include <algorithm>
+#include <vector>
+#include <chrono>
+#include <bits/stdc++.h>
+#include <fstream>
 
 using namespace std;
 
@@ -96,11 +101,11 @@ int Ejercicio1 (int n, vector<int> &a)
 
 }
 
-int parsertam(ifstream &myfile)  // Devuelve el tamanio del arreglo
+int parsertam(ifstream &myfile, char* argv)  // Devuelve el tamanio del arreglo
 {
 	int tam;
 	string n;
-	myfile.open("listas.txt");
+	myfile.open(argv);
 	if (myfile.is_open())
 	{
 		getline(myfile,n); // n esta el primer arguemento
@@ -108,16 +113,16 @@ int parsertam(ifstream &myfile)  // Devuelve el tamanio del arreglo
 		tam = atoi(n.c_str());
 		return tam;
 	}
-	else cout << "No se pudo encontrar el archivo";
+	else cout << "No se pudo encontrar el archivo" << endl;
 }
 
-vector<int> parser(ifstream &myfile) { // Devuelve un arreglo con los numeros;
+vector<int> parser(ifstream &myfile, char* argv) { // Devuelve un arreglo con los numeros;
 	int tam;
 	string n;
 	string str;
 	char cNum[10];
 	int i = 0;
-	myfile.open("listas.txt");
+	myfile.open(argv);
 	if (myfile.is_open())
 	{
 		getline(myfile,n); // n esta el primer arguemento
@@ -135,21 +140,32 @@ vector<int> parser(ifstream &myfile) { // Devuelve un arreglo con los numeros;
 	}	
 	else 
 	{
-		cout << "No se pudo encontrar el archivo";
+		cout << "No se pudo encontrar el archivo" << endl;
 	}
 }
 
-int main() {
+int main(int argc , char* argv[]) {
 	
-	ifstream myfile;
-	int n = parsertam(myfile);
-	vector<int> vec = parser(myfile);
-	for(int i = 0 ; i < vec.size() ; i++) 
+    if (argc <= 1) {
+        fprintf(stderr, "Uso: %s commando [argumentos ...]\n", argv[0]);
+        return 0;
+    }
+
+    ifstream myfile;
+	int n = parsertam(myfile,argv[1]);
+	vector<int> vec = parser(myfile,argv[1]);
+	cout << "Entrada :" << endl;
+    for(int i = 0 ; i < vec.size() ; i++) 
 	{
-		cout << vec[i] << " , ";
+        cout << vec[i] << " , ";
 	}
 	cout << endl;
-	Ejercicio1(n,vec);
+	auto start = std::chrono::high_resolution_clock::now();
+    Ejercicio1(n,vec);
+    auto finish = std::chrono::high_resolution_clock::now();
+    cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;
+    cout << "o en milisegundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000 ) << endl;
+    cout << "o en segundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000000 ) << endl;
 
 	return 0;
 

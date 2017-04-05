@@ -1,10 +1,14 @@
 #include <iostream>
-#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
-#include <vector>
+#include <ctime>
 #include <cstdlib>
 #include <algorithm>
-#include <ctime>
+#include <vector>
+#include <chrono>
+#include <bits/stdc++.h>
+#include <fstream>
 
 using namespace std;
 
@@ -131,69 +135,72 @@ int Ejercicio2 (int n, vector<int> &a)
 
 }
 
-int parsertam(ifstream &myfile)  // Devuelve el tamanio del arreglo
+int parsertam(ifstream &myfile, char* argv)  // Devuelve el tamanio del arreglo
 {
-	int tam;
-	string n;
-	myfile.open("listas.txt");
-	if (myfile.is_open())
-	{
-		getline(myfile,n); // n esta el primer arguemento
-		myfile.close();
-		tam = atoi(n.c_str());
-		return tam;
-	}
-	else cout << "No se pudo encontrar el archivo";
+    int tam;
+    string n;
+    myfile.open(argv);
+    if (myfile.is_open())
+    {
+        getline(myfile,n); // n esta el primer arguemento
+        myfile.close();
+        tam = atoi(n.c_str());
+        return tam;
+    }
+    else cout << "No se pudo encontrar el archivo" << endl;
 }
 
-vector<int> parser(ifstream &myfile) { // Devuelve un arreglo con los numeros;
-	int tam;
-	string n;
-	string str;
-	char cNum[10];
-	int i = 0;
-	myfile.open("listas.txt");
-	if (myfile.is_open())
-	{
-		getline(myfile,n); // n esta el primer arguemento
-		tam = atoi(n.c_str());
-		vector<int> list;
-		list.reserve(tam);
-		while(myfile.good()) 
-		{
-			myfile.getline(cNum,256, ' ');
-			list.push_back(atoi(cNum));	
-			i++;
-		}
-		cout << list.size() << endl;
-		myfile.close();
-		return list;			
-	}	
-	else 
-	{
-		cout << "No se pudo encontrar el archivo";
-	}
+vector<int> parser(ifstream &myfile, char* argv) { // Devuelve un arreglo con los numeros;
+    int tam;
+    string n;
+    string str;
+    char cNum[10];
+    int i = 0;
+    myfile.open(argv);
+    if (myfile.is_open())
+    {
+        getline(myfile,n); // n esta el primer arguemento
+        tam = atoi(n.c_str());
+        vector<int> list;
+        list.reserve(tam);
+        while(myfile.good()) 
+        {
+            myfile.getline(cNum,256, ' ');
+            list.push_back(atoi(cNum)); 
+            i++;
+        }
+        myfile.close();
+        return list;            
+    }   
+    else 
+    {
+        cout << "No se pudo encontrar el archivo" << endl;
+    }
 }
 
-int main() {
-	
-	ifstream myfile;
-	int n = parsertam(myfile);
-	vector<int> v(n);
-	v = parser(myfile);
-	cout << "Entrada : " << endl;
-	for(int i = 0 ; i < v.size() ; i++) 
-	{
-		cout << v[i] << " , ";
-	}
-	cout << endl;
-	time_t t1 = 0;
-	time_t t2 = 0;
-	t1 = time(0);
-	Ejercicio2(n,v);
-	t2 = time(0);
-	cout <<"time taken = "<<t2-t1<<" seconds";
+int main(int argc , char* argv[]) {
+    
+    if (argc <= 1) {
+        fprintf(stderr, "Uso: %s commando [argumentos ...]\n", argv[0]);
+        return 0;
+    }
 
-	return 0;
+    ifstream myfile;
+    int n = parsertam(myfile,argv[1]);
+    vector<int> vec = parser(myfile,argv[1]);
+    cout << "Entrada :" << endl;
+    for(int i = 0 ; i < vec.size() ; i++) 
+    {
+        cout << vec[i] << " , ";
+    }
+    cout << endl;
+    auto start = std::chrono::high_resolution_clock::now();
+    Ejercicio2(n,vec);
+    auto finish = std::chrono::high_resolution_clock::now();
+    cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;
+    cout << "o en milisegundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000 ) << endl;
+    cout << "o en segundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000000 ) << endl;
+
+    return 0;
 
 }
