@@ -28,14 +28,14 @@ int main()
     //cin.ignore();
     //getline(cin, prefix);  // i.e. prefix == "file"  -> file001.txt
 
-    string prefix = "caso_";
-    cout << "El prefijo de los archivos sera: " << prefix << endl;
-    
-    string ext(".txt");
-    
     int size;
     cout <<  endl << "Introduzca la longitud del arreglo :" << endl ;
     cin >> size;
+
+    string prefix = "_caso_";
+    cout << "El prefijo de los archivos sera: " << size << prefix << endl;
+    
+    string ext(".txt");
 
     int c1, n1;
 
@@ -43,7 +43,7 @@ int main()
     {   // use a stringstream to create a file names like: prefix001.txt
         stringstream ss;
         //ss << prefix << setfill('0') << setw(n_digits) << i << ext;
-        ss << prefix << i << ext;
+        ss << size << prefix << i << ext;
 
         // open the file. If not c++11 use  ss.str().c_str()  instead
         ofstream file( ss.str() );
