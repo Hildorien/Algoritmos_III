@@ -13,8 +13,8 @@
 using namespace std;
 
 //ACLARACION : Para resolver los ejercicios opte por devolver la MAXIMA cantidad de elementos pintados en las funciones recursivas.
-// Luego la funcion principal, que devuelve el resultado final, simplemente le resta a la longitud del arreglo lo que devuelven las
-// funciones recursivas, es decir , la MINIMA cantidad de elementos que deje sin pintar en el arreglo.
+// Luego la funcion principal, que devuelve el resultado final, simplemente le resta a la longitud del arreglo la MAXIMA 
+//cantidad de numero pintados , es decir , la MINIMA cantidad de elementos que deje sin pintar en el arreglo.
 
 
 int maxPintados1;
@@ -94,8 +94,8 @@ int Ejercicio1 (int n, vector<int> &a)
         }
         BacktrackSinPodar(a,b,k); // Esta funcion toma el arreglo original, uno auxiliar y una posicion en el arreglo
 
-        cout << "Salida :" << endl;
-        cout << n - maxPintados1 << endl;
+        //cout << "Salida :" << endl;
+        //cout << n - maxPintados1 << endl;
         return (n - maxPintados1);
     }
 
@@ -154,18 +154,21 @@ int main(int argc , char* argv[]) {
     ifstream myfile;
 	int n = parsertam(myfile,argv[1]);
 	vector<int> vec = parser(myfile,argv[1]);
-	cout << "Entrada :" << endl;
+	/*cout << "Entrada :" << endl;
     for(int i = 0 ; i < vec.size() ; i++) 
 	{
         cout << vec[i] << " , ";
 	}
 	cout << endl;
+    */
 	auto start = std::chrono::high_resolution_clock::now();
     Ejercicio1(n,vec);
     auto finish = std::chrono::high_resolution_clock::now();
-    cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;
-    cout << "o en milisegundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000 ) << endl;
-    cout << "o en segundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000000 ) << endl;
+    cout << std::chrono::duration_cast<std::chrono::milliseconds>(finish-start).count() << " ";
+    /*cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;
+    cout << "o en milisegundos : "<< std::chrono::duration_cast<std::chrono::milliseconds>(finish-start).count() << endl;
+    cout << "o en segundos : "<< std::chrono::duration_cast<std::chrono::seconds>(finish-start).count()  << endl;
+    */
 
 	return 0;
 

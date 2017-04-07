@@ -9,83 +9,70 @@
 #include <chrono>
 #include <bits/stdc++.h>
 #include <fstream>
-#define MAX 102
+#define MAX 100
+
 
 using namespace std;
 
 //ACLARACION : Para resolver los ejercicios opte por devolver la MAXIMA cantidad de elementos pintados en las funciones recursivas.
-// Luego la funcion principal, que devuelve el resultado final, simplemente le resta a la longitud del arreglo lo que devuelven las
-// funciones recursivas, es decir , la MINIMA cantidad de elementos que deje sin pintar en el arreglo.
+// Luego la funcion principal, que devuelve el resultado final, simplemente le resta a la longitud del arreglo la MAXIMA 
+//cantidad de numero pintados , es decir , la MINIMA cantidad de elementos que deje sin pintar en el arreglo.
 
-int max_Pintados(vector<int> &a , int dp[MAX][MAX][MAX], int n, int dec, int inc, int i)
+int max_Pintados(vector<int> &a , int cubo[MAX][MAX][MAX], int n, int dec, int inc, int i)
 {
-    // Si ya lo calcule devolver
-    if (dp[dec][inc][i] != -1)
-        return dp[dec][inc][i];
+ 
+   // Si ya lo calcule devolver
+    if (cubo[dec][inc][i] != -1){
+        return cubo[dec][inc][i];}
  
     // Si ya revise todo
-    if (i == n)
-        return 0;
+    if (i == n){
+        return 0;}
  
     // en a[i] tomo la decision de pintarlo de rojo (ser parte de una cadena creciente)
-    if (a[i] > a[inc])
-        // Sumo 1 y voy al siguiente elemento tomando la decision de que en la pos i lo pinte de rojo
-        dp[dec][inc][i] = 1 + max_Pintados(a, dp, n, dec, i, i + 1);
- 
+    if (a[i] > a[inc]) 
+    {
+        // Tengo que guardar el camino optimo es decir tenes la maxima cant. de numero pintados.
+        // Voy a guardar el maximo entre pintarlo de rojo y seguir con la recursion tomando esa decision 
+        // (por eso le sumo uno) o quedarme con el valor que calcule antes
+        cubo[dec][inc][i] = max ( 1 + max_Pintados(a, cubo, n, dec, i, i + 1),cubo[dec][inc][i]);
+    }
+  
     // en a[i] tomo la decision de pintarlo de azul (ser parte de una cadena decreciente)
     if (a[i] < a[dec])
     {
-        // Si es la primera vez que lo voy a pintar de azul
-        if (dp[dec][inc][i] == -1)
-            // Sumo 1 y voy al siguiente elemento tomando la decision de que en la pos i lo pinte de azul
-            dp[dec][inc][i] = 1 + max_Pintados(a, dp, n, i, inc, i + 1);
- 
-        // Si ya se habia calculado los pintados hasta i (como siempre pregunto primero si puedo pintarlo de rojo 
-        // quiere decir que i ya fue considerado como rojo). Ahora debo ver si la decision es optima 
-        // , es decir , si tengo la maxima cantidad de elementos pintados
-        else
-            //Tengo que decidir el maximo entre pintarlo de azul (por eso le sumo 1) y seguir avanzando recursivamente
-            // o el valor previamente calculado (es el mejor hasta ahora).
-            dp[dec][inc][i] = max( 1 + max_Pintados(a, dp, n, i, inc, i + 1),
-                                                  dp[dec][inc][i]);
+        // Tengo que guardar el camino optimo es decir tenes la maxima cant. de numero pintados.
+        // Voy a guardar el maximo entre pintarlo de azul y seguir con la recursion tomando esa decision 
+        // (por eso le sumo uno) o quedarme con el valor que calcule antes
+        cubo[dec][inc][i] = max( 1 + max_Pintados(a, cubo, n, i, inc, i + 1), cubo[dec][inc][i]);
     }
+   
+   // Siempre puedo no pintarlo , asique tambien debo guardar el valor optimo. En este caso 
+   // tomo el maximo entre no pintarlo (por eso no le sumo uno) y el valor que tenia antes calculado.
+    cubo[dec][inc][i] = max( max_Pintados(a, cubo, n, dec, inc, i + 1), cubo[dec][inc][i]);
  
-    // Si el elemento no puede ser pintado de algun color y es la primera vez que paso por esta decision
-    if (dp[dec][inc][i] == -1)
-       // Ya tengo uno que no puedo pintar asique no le sumo nada y sigo avanzando con recursion
-        dp[dec][inc][i] = max_Pintados(a, dp, n, dec, inc, i + 1); 
- 
-    // Si ya se habia calculado los pintados hasta la pos i , y ahora se considera no pintarlo
-    else
-    // Tengo que tomar la decision optima, es decir, el maximo entre dejarlo como no pintado 
-    // (por eso no le sumo nada) y seguir avanzando recursivamente tomando la decision de que no pinte el i 
-    // o el valor previamente calculado (es el mejor hasta ahora).
-        dp[dec][inc][i] = max( max_Pintados(a, dp, n, dec, inc, i + 1),
-                                                    dp[dec][inc][i]);
- 
-    return dp[dec][inc][i];
+    return cubo[dec][inc][i];
+
 }
  
 
 int Ejercicio3(int n, vector<int> &a)
 {
-    // Agrego dos elementos al vector
-    // para que se puedan armar las subsecuencias de rojos y azules
-    // en la pos MAX - 2  es asignado INT_MAX para los azules (cadena decreciente)
-    // ya que el siguiente numero debe ser mas chico. De esta manera siempre un elem va a ser mas chico que INT_MAX
-    //Igualmente para los rojos (cadena creciente) INT_MIN es asignado a la pos MAX - 1. Esto sirve para los casos donde
-    // se comienza a pintar de un color que no use y la comparacion a[i] < a[dec] con dec = INT_MAX siempre es true para el caso
-    // de querer usar el color azul por primera vez en el arreglo.
-    // Para el resto de los casos a[dec] y a[inc] guardan los ultimos elementos pintados del de azul y rojo respectivamente.
-    a[MAX - 2] = INT_MAX;
-    a[MAX - 1] = INT_MIN;
  
-    int dp[MAX][MAX][MAX]; // En el caso de que el arreglo original tenga una longitud mayor a 100 esto no puede resolverse
-    // Sin embargo para comparar con los otros dos algoritmos voy a estar probando con longitudes menores a 100
-    memset(dp, -1, sizeof dp);
-    // Como max_Pintados devuelve la maxima cantidad de elementos que puedo pintar en el arreglo
-    // restarle a n esta funcion me devuelve el minimo de elementos que NO pinte en el arreglo.
-    return  n - max_Pintados(a, dp, n, MAX - 2, MAX - 1, 0);
+    int cubo[MAX][MAX][MAX]; //Estructura auxiliar que sirve como diccionario
+    memset(cubo, -1 , sizeof cubo); // Inicializo con -1 para indicar que no se pinto nada. 
+     // Le agrego dos valores al arreglo para formar las cadenas de rojos y azules. Esto es para que
+    // cuando pinte por primera vez un color siempre va a poder hacerlo ya que para el caso de querer
+    // pintar el a[i] de rojo , el ultimo de ese color es INT_MIN y siempre el a[i] > INT_MIN. 
+    // El caso azul es analogo.
+    // Notar que para arreglos con longitud mayor a 100 esto no funciona pero no voy a usar 
+    // mas que eso para hacer pruebas.
+    a[MAX -1] = INT_MAX; 
+    a[MAX -2] = INT_MIN;
+    int r = n - max_Pintados(a, cubo, n, MAX -1, MAX - 2,0);
+    //cout << "Salida :" << endl;
+    //cout << r << endl;
+    return  r;
 }
 
 int parsertam(ifstream &myfile, char* argv)  // Devuelve el tamanio del arreglo
@@ -141,19 +128,21 @@ int main(int argc , char* argv[]) {
     ifstream myfile;
     int n = parsertam(myfile,argv[1]);
     vector<int> vec = parser(myfile,argv[1]);
-    cout << "Entrada :" << endl;
-    for(int i = 0 ; i < vec.size() ; i++) 
+   /* cout << "Entrada :" << endl;
+    for(int i = 0 ; i < vec.size(); i++) 
     {
         cout << vec[i] << " , ";
     }
     cout << endl;
+    */
     auto start = std::chrono::high_resolution_clock::now();
     Ejercicio3(n,vec);
     auto finish = std::chrono::high_resolution_clock::now();
-    cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;
-    cout << "o en milisegundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000 ) << endl;
-    cout << "o en segundos : "<< (std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() / 1000000000 ) << endl;
-
+    cout << std::chrono::duration_cast<std::chrono::milliseconds>(finish-start).count() << " ";
+   /* cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;
+    cout << "o en milisegundos : "<< std::chrono::duration_cast<std::chrono::milliseconds>(finish-start).count() << endl;
+    cout << "o en segundos : "<< std::chrono::duration_cast<std::chrono::seconds>(finish-start).count()  << endl;
+    */
     return 0;
 
 }
