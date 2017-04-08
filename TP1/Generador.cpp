@@ -57,7 +57,7 @@ int main()
         file << size << endl;
         for (c1 = 1; c1 <= size; c1++) 
         {
-            n1 = rand()%size + 1;
+            n1 = rand()%100;
             if(c1 < size){file << n1 << " ";} // Si no es el final hacer un espacio
             else{ file  << n1 << endl;}        // Si voy a imprimir el ultimo no poner un espacio despues
         }

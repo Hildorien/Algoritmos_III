@@ -9,8 +9,8 @@
 #include <chrono>
 #include <bits/stdc++.h>
 #include <fstream>
-#define MAX 100
 
+#define MAX 202
 
 using namespace std;
 
@@ -18,7 +18,7 @@ using namespace std;
 // Luego la funcion principal, que devuelve el resultado final, simplemente le resta a la longitud del arreglo la MAXIMA 
 //cantidad de numero pintados , es decir , la MINIMA cantidad de elementos que deje sin pintar en el arreglo.
 
-int max_Pintados(vector<int> &a , int cubo[MAX][MAX][MAX], int n, int dec, int inc, int i)
+int max_Pintados(vector<int> &a , vector<vector<vector<int> > > &cubo , int n, int dec, int inc, int i)
 {
  
    // Si ya lo calcule devolver
@@ -32,7 +32,7 @@ int max_Pintados(vector<int> &a , int cubo[MAX][MAX][MAX], int n, int dec, int i
     // en a[i] tomo la decision de pintarlo de rojo (ser parte de una cadena creciente)
     if (a[i] > a[inc]) 
     {
-        // Tengo que guardar el camino optimo es decir tenes la maxima cant. de numero pintados.
+        // Tengo que guardar el valor optimo es decir la maxima cant. de numero pintados a partir de i.
         // Voy a guardar el maximo entre pintarlo de rojo y seguir con la recursion tomando esa decision 
         // (por eso le sumo uno) o quedarme con el valor que calcule antes
         cubo[dec][inc][i] = max ( 1 + max_Pintados(a, cubo, n, dec, i, i + 1),cubo[dec][inc][i]);
@@ -41,7 +41,7 @@ int max_Pintados(vector<int> &a , int cubo[MAX][MAX][MAX], int n, int dec, int i
     // en a[i] tomo la decision de pintarlo de azul (ser parte de una cadena decreciente)
     if (a[i] < a[dec])
     {
-        // Tengo que guardar el camino optimo es decir tenes la maxima cant. de numero pintados.
+        // Tengo que guardar el valor optimo es decir la maxima cant. de numero pintados a partir de i.
         // Voy a guardar el maximo entre pintarlo de azul y seguir con la recursion tomando esa decision 
         // (por eso le sumo uno) o quedarme con el valor que calcule antes
         cubo[dec][inc][i] = max( 1 + max_Pintados(a, cubo, n, i, inc, i + 1), cubo[dec][inc][i]);
@@ -58,20 +58,19 @@ int max_Pintados(vector<int> &a , int cubo[MAX][MAX][MAX], int n, int dec, int i
 
 int Ejercicio3(int n, vector<int> &a)
 {
- 
-    int cubo[MAX][MAX][MAX]; //Estructura auxiliar que sirve como diccionario
-    memset(cubo, -1 , sizeof cubo); // Inicializo con -1 para indicar que no se pinto nada. 
+    vector<vector<vector<int> > > cubo (MAX,vector<vector<int> >(MAX,vector <int>(MAX,-1))); //Estructura auxiliar que sirve como diccionario
+    //memset(cubo, -1 , sizeof cubo); // Inicializo con -1 para indicar que no se pinto nada. 
      // Le agrego dos valores al arreglo para formar las cadenas de rojos y azules. Esto es para que
     // cuando pinte por primera vez un color siempre va a poder hacerlo ya que para el caso de querer
     // pintar el a[i] de rojo , el ultimo de ese color es INT_MIN y siempre el a[i] > INT_MIN. 
     // El caso azul es analogo.
     // Notar que para arreglos con longitud mayor a 100 esto no funciona pero no voy a usar 
     // mas que eso para hacer pruebas.
-    a[MAX -1] = INT_MAX; 
-    a[MAX -2] = INT_MIN;
-    int r = n - max_Pintados(a, cubo, n, MAX -1, MAX - 2,0);
-    //cout << "Salida :" << endl;
-    //cout << r << endl;
+    a[MAX - 1] = INT_MAX; 
+    a[MAX - 2] = INT_MIN;
+    int r = n - max_Pintados(a, cubo, n, MAX - 1, MAX - 2,0);
+   // cout << "Salida :" << endl;
+   // cout << r << endl;
     return  r;
 }
 
@@ -118,6 +117,7 @@ vector<int> parser(ifstream &myfile, char* argv) { // Devuelve un arreglo con lo
     }
 }
 
+
 int main(int argc , char* argv[]) {
     
     if (argc <= 1) {
@@ -128,13 +128,12 @@ int main(int argc , char* argv[]) {
     ifstream myfile;
     int n = parsertam(myfile,argv[1]);
     vector<int> vec = parser(myfile,argv[1]);
-   /* cout << "Entrada :" << endl;
+    /*cout << "Entrada :" << endl;
     for(int i = 0 ; i < vec.size(); i++) 
     {
         cout << vec[i] << " , ";
     }
-    cout << endl;
-    */
+    cout << endl;*/
     auto start = std::chrono::high_resolution_clock::now();
     Ejercicio3(n,vec);
     auto finish = std::chrono::high_resolution_clock::now();
