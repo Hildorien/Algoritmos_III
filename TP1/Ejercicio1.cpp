@@ -53,14 +53,14 @@ bool esSolucion(vector<int> &a , vector<int> &b ,  int k , int c)
     return true;
 }
 
-int BacktrackSinPodar(vector<int> &a , vector<int> &b  , int k) 
+int backtrackSinPodar(vector<int> &a , vector<int> &b  , int k) 
 {
     for (int c = 1 ; c <= 3 ; c++)    // El ciclo principal del algoritmo recorre las tres descisiones posible : 
     {                                 // c = 1 es ROJO, c = 2 es AZUL , c = 3 es NO lo pinto
         b[k] = c;
         if( (k+1) < a.size())
         {
-            BacktrackSinPodar(a,b,k+1);  // Si hay mas elementos por recorrer hago la llamada recursiva con el siguiente
+            backtrackSinPodar(a,b,k+1);  // Si hay mas elementos por recorrer hago la llamada recursiva con el siguiente
         }
         else
         {               
@@ -76,7 +76,7 @@ int BacktrackSinPodar(vector<int> &a , vector<int> &b  , int k)
     return true; // Si sali del ciclo es porque ya probe los tres colores;
 }
 
-int Ejercicio1 (int n, vector<int> &a) 
+int ejercicio1 (int n, vector<int> &a) 
 {
     a.resize(n);
     if (n == 0)  // Si el arreglo es vacio no pinto nada;
@@ -92,7 +92,7 @@ int Ejercicio1 (int n, vector<int> &a)
         {
             b[i] = 0;   // Inicializo el arreglo auxiliar con 0
         }
-        BacktrackSinPodar(a,b,k); // Esta funcion toma el arreglo original, uno auxiliar y una posicion en el arreglo
+        backtrackSinPodar(a,b,k); // Esta funcion toma el arreglo original, uno auxiliar y una posicion en el arreglo
 
         //cout << "Salida :" << endl;
         //cout << n - maxPintados1 << endl;
@@ -162,7 +162,7 @@ int main(int argc , char* argv[]) {
 	cout << endl;
     */
 	auto start = std::chrono::high_resolution_clock::now();
-    Ejercicio1(n,vec);
+    ejercicio1(n,vec);
     auto finish = std::chrono::high_resolution_clock::now();
     cout << std::chrono::duration_cast<std::chrono::milliseconds>(finish-start).count() << " ";
     /*cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;

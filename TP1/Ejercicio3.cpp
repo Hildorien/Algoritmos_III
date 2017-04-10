@@ -56,15 +56,14 @@ int max_Pintados(vector<int> &a , vector<vector<vector<int> > > &cubo , int n, i
 }
  
 
-int Ejercicio3(int n, vector<int> &a)
+int ejercicio3(int n, vector<int> &a)
 {
     vector<vector<vector<int> > > cubo (MAX,vector<vector<int> >(MAX,vector <int>(MAX,-1))); //Estructura auxiliar que sirve como diccionario
-    //memset(cubo, -1 , sizeof cubo); // Inicializo con -1 para indicar que no se pinto nada. 
      // Le agrego dos valores al arreglo para formar las cadenas de rojos y azules. Esto es para que
     // cuando pinte por primera vez un color siempre va a poder hacerlo ya que para el caso de querer
     // pintar el a[i] de rojo , el ultimo de ese color es INT_MIN y siempre el a[i] > INT_MIN. 
     // El caso azul es analogo.
-    // Notar que para arreglos con longitud mayor a 100 esto no funciona pero no voy a usar 
+    // Notar que para arreglos con longitud mayor a 200 esto no funciona pero no voy a usar 
     // mas que eso para hacer pruebas.
     a[MAX - 1] = INT_MAX; 
     a[MAX - 2] = INT_MIN;
@@ -135,7 +134,7 @@ int main(int argc , char* argv[]) {
     }
     cout << endl;*/
     auto start = std::chrono::high_resolution_clock::now();
-    Ejercicio3(n,vec);
+    ejercicio3(n,vec);
     auto finish = std::chrono::high_resolution_clock::now();
     cout << std::chrono::duration_cast<std::chrono::milliseconds>(finish-start).count() << " ";
    /* cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;

@@ -33,7 +33,7 @@ int cantPintados(int k , vector<int> &b ) //Cuenta la cantidad de azules y rojos
     return res;
 }
 
-bool PuedoPintar(vector<int> &a , vector<int> &b ,  int k , int c)
+bool puedoPintar(vector<int> &a , vector<int> &b ,  int k , int c)
 {
 
     if (k == 0) {return true;} //Siempre puedo pintar el primer elemento del arreglo
@@ -86,11 +86,11 @@ bool PuedoPintar(vector<int> &a , vector<int> &b ,  int k , int c)
 
 }
 
-int BacktrackColoreo(vector<int> &a , vector<int> &b , int k) 
+int backtrackConPoda(vector<int> &a , vector<int> &b , int k) 
 {
     for (int c = 1 ; c <= 3 ; c++)    // El ciclo principal del algoritmo recorre las tres descisiones posible : 
     {                                 // c = 1 es ROJO, c = 2 es AZUL , c = 3 es NO lo pinto
-        if(PuedoPintar(a,b,k,c)) 
+        if(puedoPintar(a,b,k,c)) 
         {
             b[k] = c;                 // b es un arreglos paralelo al original que lo uso para ir construyendo las posibles soluciones
             
@@ -103,6 +103,8 @@ int BacktrackColoreo(vector<int> &a , vector<int> &b , int k)
                 int p = cantPintados(k,b);     // Cuento cuantos elementos pinte hasta k
                 if(p >= maxPintados2){maxPintados2 = p;}  // Si supere los que habia pintado en una solucion anterior guardada en
                                                         // variable global, actualizo el maximo 
+                if(maxPintados2 ==  a.size()){ return true;} // Si llegue a pintar todos , esta solucion es la optima, no hace
+                                                             // falta seguir revisando
             }
             
         }                   
@@ -110,7 +112,7 @@ int BacktrackColoreo(vector<int> &a , vector<int> &b , int k)
     return true; // Si sali del ciclo es porque ya probe los tres colores;
 }
 
-int Ejercicio2 (int n, vector<int> &a) 
+int ejercicio2 (int n, vector<int> &a) 
 {
     a.resize(n);
     if (n == 0)  // Si el arreglo es vacio no pinto nada;
@@ -126,7 +128,7 @@ int Ejercicio2 (int n, vector<int> &a)
         {
             b[i] = 0;   // Inicializo el arreglo auxiliar con 0
         }
-        BacktrackColoreo(a,b,k); // Esta funcion toma el arreglo original, uno auxiliar y una posicion en el arreglo
+        backtrackConPoda(a,b,k); // Esta funcion toma el arreglo original, uno auxiliar y una posicion en el arreglo
        
        // cout << "Salida :" << endl;
        // cout << n - maxPintados2 << endl;
@@ -195,7 +197,7 @@ int main(int argc , char* argv[]) {
     }
     cout << endl;*/
     auto start = std::chrono::high_resolution_clock::now();
-    Ejercicio2(n,vec);
+    ejercicio2(n,vec);
     auto finish = std::chrono::high_resolution_clock::now();
     cout << std::chrono::duration_cast<std::chrono::milliseconds>(finish-start).count() << " ";
     //cout <<"tiempo tomado = "<< std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() <<" nanosegundos" << endl;
