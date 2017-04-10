@@ -96,7 +96,7 @@ int backtrackConPoda(vector<int> &a , vector<int> &b , int k)
             
             if( (k+1) < a.size())            // Si hay mas elementos por pintar llamo devuelta a la funcion pero en el siguiente elemento
             {
-                BacktrackColoreo(a,b,k+1);    
+                backtrackConPoda(a,b,k+1);    
             }
             else                      // Si llegue a una hoja en el arbol de decisiones. Termine con una posible solucion en b.
             {

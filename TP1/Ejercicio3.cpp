@@ -26,8 +26,9 @@ int max_Pintados(vector<int> &a , vector<vector<vector<int> > > &cubo , int n, i
         return cubo[dec][inc][i];}
  
     // Si ya revise todo
-    if (i == n){
-        return 0;}
+   // if (i == n){
+    //    return 0;}
+    if( i == -1){return 0;}
  
     // en a[i] tomo la decision de pintarlo de rojo (ser parte de una cadena creciente)
     if (a[i] > a[inc]) 
@@ -35,7 +36,7 @@ int max_Pintados(vector<int> &a , vector<vector<vector<int> > > &cubo , int n, i
         // Tengo que guardar el valor optimo es decir la maxima cant. de numero pintados a partir de i.
         // Voy a guardar el maximo entre pintarlo de rojo y seguir con la recursion tomando esa decision 
         // (por eso le sumo uno) o quedarme con el valor que calcule antes
-        cubo[dec][inc][i] = max ( 1 + max_Pintados(a, cubo, n, dec, i, i + 1),cubo[dec][inc][i]);
+        cubo[dec][inc][i] = max ( 1 + max_Pintados(a, cubo, n, dec, i, i - 1),cubo[dec][inc][i]);
     }
   
     // en a[i] tomo la decision de pintarlo de azul (ser parte de una cadena decreciente)
@@ -44,12 +45,12 @@ int max_Pintados(vector<int> &a , vector<vector<vector<int> > > &cubo , int n, i
         // Tengo que guardar el valor optimo es decir la maxima cant. de numero pintados a partir de i.
         // Voy a guardar el maximo entre pintarlo de azul y seguir con la recursion tomando esa decision 
         // (por eso le sumo uno) o quedarme con el valor que calcule antes
-        cubo[dec][inc][i] = max( 1 + max_Pintados(a, cubo, n, i, inc, i + 1), cubo[dec][inc][i]);
+        cubo[dec][inc][i] = max( 1 + max_Pintados(a, cubo, n, i, inc, i - 1), cubo[dec][inc][i]);
     }
    
    // Siempre puedo no pintarlo , asique tambien debo guardar el valor optimo. En este caso 
    // tomo el maximo entre no pintarlo (por eso no le sumo uno) y el valor que tenia antes calculado.
-    cubo[dec][inc][i] = max( max_Pintados(a, cubo, n, dec, inc, i + 1), cubo[dec][inc][i]);
+    cubo[dec][inc][i] = max( max_Pintados(a, cubo, n, dec, inc, i - 1), cubo[dec][inc][i]);
  
     return cubo[dec][inc][i];
 
@@ -67,8 +68,8 @@ int ejercicio3(int n, vector<int> &a)
     // mas que eso para hacer pruebas.
     a[MAX - 1] = INT_MAX; 
     a[MAX - 2] = INT_MIN;
-    int r = n - max_Pintados(a, cubo, n, MAX - 1, MAX - 2,0);
-   // cout << "Salida :" << endl;
+    int r = n - max_Pintados(a, cubo, n, MAX - 1, MAX - 2,n-1);
+    //cout << "Salida :" << endl;
    // cout << r << endl;
     return  r;
 }
