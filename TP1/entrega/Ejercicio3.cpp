@@ -74,6 +74,7 @@ int ejercicio3(int n, vector<int> &a)
     return  r;
 }
 
+//Parsertam y parser son funciones que se utilizan para levantar los archivos
 int parsertam(ifstream &myfile, char* argv)  // Devuelve el tamanio del arreglo
 {
     int tam;
@@ -115,6 +116,21 @@ vector<int> parser(ifstream &myfile, char* argv) { // Devuelve un arreglo con lo
     {
         cout << "No se pudo encontrar el archivo" << endl;
     }
+}
+
+
+// El siguiente algoritmo es uno generico de complejidad O(n*n*n) para comparar con el ejercicio 3
+int algoritmocubico(int n , vector<int>& a)
+{
+    vector<vector<vector<int> > > cubo (MAX,vector<vector<int> >(MAX,vector <int>(3*MAX,-1)));
+    for (int i = 0; i < n ; i++){
+        for(int j = 0; j < n ; j++){
+            for (int k = 0; k < 3*n ; k++){
+                cubo[i][j][k] = a[k];
+            }
+        }
+    }
+    return cubo[n-1][n-1][n-1];
 }
 
 
